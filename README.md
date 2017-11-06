@@ -1,2 +1,2 @@
 # renthereum-workshop-contracts
-Ethereum case of use: Rent and sell. Ethereum Workshop.
+Ethereum case of use: Rent items. Ethereum Workshop.
