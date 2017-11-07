@@ -45,6 +45,10 @@ contract Renthereum {
     uint256 _value 
   );
 
+  function Renthereum() {
+    itemsCount = 0;
+  }
+
   modifier isValidItem(uint256 _index, mapping(uint256 => Order) _itemsForHire) {
     require(_index >= 0 && _index < itemsCount && _itemsForHire[_index].status == Status.AVAILABLE);
     _;
@@ -57,6 +61,11 @@ contract Renthereum {
 
   modifier isValidPeriod(uint _hirePeriod, uint _minPeriod, uint _maxPeriod){
     require(_hirePeriod >= _minPeriod && _hirePeriod <= _maxPeriod);
+    _;
+  }
+
+  modifier onlyOwner(address _itemOwner) {
+    require(msg.sender == _itemOwner);
     _;
   }
 
@@ -101,7 +110,16 @@ contract Renthereum {
     return itemsCount - 1;
   }
 
-
-
+  function cancelOrder(uint256 _index)
+    isValidItem(_index, itemsForHire)
+    onlyOwner(itemsForHire[_index].owner)
+    returns(bool)
+  {
+    Order memory order = itemsForHire[_index];
+    order.status = Status.CANCELED;
+    itemsForHire[_index] = order;
+    Canceled(order.owner,order.id, order.name, order.dailyValue);  
+    return true;
+  }
 
 }
