@@ -14,10 +14,10 @@ contract Renthereum {
   struct Order {
     string id;
     address owner;
-    address hirer;
+    address customer;
     string name;
     string description;
-    uint256 value;
+    uint256 dailyValue;
     uint minPeriod;
     uint maxPeriod;
     uint hirePeriod;
@@ -33,7 +33,7 @@ contract Renthereum {
 
   event Rented(
     address _owner,
-    address _hirer,
+    address _customer,
     uint _period,
     uint256 _value
   );
@@ -62,14 +62,14 @@ contract Renthereum {
 
   function hire(uint256 _index, uint _period) payable
     isValidItem(_index, itemsForHire)
-    isValidValue(_period, itemsForHire[_index].value) 
+    isValidValue(_period, itemsForHire[_index].dailyValue) 
     isValidPeriod(_period, itemsForHire[_index].minPeriod, itemsForHire[_index].maxPeriod)
     public
     returns(bool)
   {
     Order item = itemsForHire[_index];  
     item.owner.transfer(msg.value);
-    item.hirer = msg.sender;
+    item.customer = msg.sender;
     item.hirePeriod = _period;
     item.status = Status.RENTED;
     itemsForHire[_index] = item;
@@ -77,7 +77,29 @@ contract Renthereum {
     return true;
   }
 
-
+  function createOrder(
+    string _id,
+    string _name,
+    string _description,
+    uint256 _dailyValue,
+    uint _minPeriod,
+    uint _maxPeriod)
+    public
+    returns(uint) 
+  {
+    Order memory item;
+    item.owner = msg.sender;
+    item.id = _id;
+    item.name = _name;
+    item.description = _description;
+    item.dailyValue = _dailyValue;
+    item.minPeriod = _minPeriod;
+    item.maxPeriod = _maxPeriod;
+    itemsForHire[itemsCount] = item;
+    itemsCount++;
+    Ordered(_id, item.owner, item.name, item.dailyValue);
+    return itemsCount - 1;
+  }
 
 
 
