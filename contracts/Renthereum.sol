@@ -109,7 +109,7 @@ contract Renthereum {
     Ordered(_id, item.owner, item.name, item.dailyValue);
     return itemsCount - 1;
   }
-
+  // cancel an available order
   function cancelOrder(uint256 _index)
     isValidItem(_index, itemsForHire)
     onlyOwner(itemsForHire[_index].owner)
