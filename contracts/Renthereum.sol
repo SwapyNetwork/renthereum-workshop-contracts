@@ -25,6 +25,7 @@ contract Renthereum {
   }
 
   event Ordered(
+    uint256 _index, 
     string _id,
     address _owner,
     string _name,
@@ -39,8 +40,8 @@ contract Renthereum {
   );
 
   event Canceled(
-    address _owner,
     string _id,
+    address _owner,
     string _name,
     uint256 _value 
   );
@@ -106,10 +107,10 @@ contract Renthereum {
     item.maxPeriod = _maxPeriod;
     itemsForHire[itemsCount] = item;
     itemsCount++;
-    Ordered(_id, item.owner, item.name, item.dailyValue);
+    Ordered(itemsCount - 1, _id, item.owner, item.name, item.dailyValue);
     return itemsCount - 1;
   }
-  
+
   // cancel an available order
   function cancelOrder(uint256 _index)
     isValidItem(_index, itemsForHire)
@@ -120,7 +121,7 @@ contract Renthereum {
     Order memory order = itemsForHire[_index];
     order.status = Status.CANCELED;
     itemsForHire[_index] = order;
-    Canceled(order.owner,order.id, order.name, order.dailyValue);  
+    Canceled(order.id, order.owner, order.name, order.dailyValue);  
     return true;
   }
 
