@@ -3,15 +3,31 @@ const should = require('chai')
     .should()
 const expect = require('chai').expect;
 
-
 // --- Artifacts
 const Renthereum = artifacts.require("./Renthereum.sol");
+
+// --- Test constants 
+const itemsToOrder = [{
+    id: '123456789',
+    name : 'bike',
+    description: 'a great bike',
+    dailyValue: 23,
+    minPeriod: 1,
+    maxPeriod: 30
+}, {
+    id: '1234567891',    
+    name: 'car',
+    description: 'beautiful SUV',
+    dailyValue: 1200,
+    minPeriod: 1,
+    maxPeriod: 180
+}]; 
 
 // --- Test variables 
 let owner = null;
 let customer = null;
 let renthereum = null;
-let items = [];
+let itemsToRent = [];
 
 contract('Renthereum', accounts => {
 
@@ -20,15 +36,23 @@ contract('Renthereum', accounts => {
         customer = accounts[1];
         Renthereum.new().then(contract => {
             renthereum = contract;
-            done();
+            const promises = [
+                renthereum.Ordered().watch(()=>{}),
+                renthereum.Canceled().watch(()=>{}),
+                renthereum.Rented().watch(()=>{}),
+            ]
+            Promise.all(promises).then(() => {
+                done();
+            })            
         })
     })
     
-    it("should rent an item", done => {
-        renthereum.createOrder('123456789','bike','a great bike', 23, 1, 30, {from: owner}).then(transaction => {
+    it("should order an item", done => {
+        let item = itemsToOrder[0];
+        renthereum.createOrder(item.id,item.name,item.description, item.dailyValue, item.minPeriod, item.maxPeriod, {from: owner}).then(transaction => {
             should.exist(transaction.tx);
-            renthereum.Ordered( { _id : '123456789' }).watch((err, log) => {
-                const event = log.args;
+            renthereum.Ordered().get(function(err, logs){
+                const event = logs[0].args;
                 expect(event).to.include.all.keys([
                     '_index',
                     '_id',
@@ -37,19 +61,18 @@ contract('Renthereum', accounts => {
                     '_value'
                 ]);
                 assert.equal(event._owner, owner, "The user must be the owner of the rent order");
-                items.push(event);
-                renthereum.Ordered().stopWatching();
+                itemsToRent.push(event);
                 done();       
-             })
+            })
         })
     })
 
     it("should cancel a rent order", done => {
-        let itemIndex = items[0]._index;
+        let itemIndex = itemsToRent[0]._index;
         renthereum.cancelOrder(itemIndex, {from: owner}).then(transaction => {
             should.exist(transaction.tx);
-            renthereum.Canceled( { _id : '123456789' }).watch((err, log) => {
-                const event = log.args;
+            renthereum.Canceled().get(function(err, logs){
+                const event = logs[0].args;
                 expect(event).to.include.all.keys([
                     '_id',
                     '_owner',
@@ -62,23 +85,24 @@ contract('Renthereum', accounts => {
         })
     })
 
-    it("should rent an second item", done => {
-        renthereum.createOrder('1234567891','car','a great car', 1200, 1, 180, {from: owner}).then(transaction => {
+    it("should order an second item", done => {
+        let item = itemsToOrder[1];
+        renthereum.createOrder(item.id, item.name, item.description, item.dailyValue, item.minPeriod, item.maxPeriod, {from: owner}).then(transaction => {
             should.exist(transaction.tx);
-            renthereum.Ordered( { _id : '1234567891' }).watch((err, log) => {
-                const event = log.args;
-                items.push(event);    
+            renthereum.Ordered().get(function(err, logs){
+                const event = logs[0].args;
+                itemsToRent.push(event);    
                 done();        
             })
         })
     })
 
     it("should rent an item", done => {
-        let itemIndex = items[1]._index;
+        let itemIndex = itemsToRent[1]._index;
         renthereum.rent(itemIndex, 30, {from: customer, value: 1200 * 30}).then(transaction => {
             should.exist(transaction.tx);
-            renthereum.Rented( { _customer : customer }).watch((err, log) => {
-                const event = log.args;
+            renthereum.Rented().get(function(err, logs){
+                const event = logs[0].args;
                 expect(event).to.include.all.keys([
                     '_owner',
                     '_customer',
@@ -88,6 +112,17 @@ contract('Renthereum', accounts => {
                 assert.equal(event._customer, customer, "The user must be the customer of the order");
                 done();              
             })
+        })
+    })
+
+    after(done => {
+        const promises = [
+            renthereum.Ordered().stopWatching(),
+            renthereum.Canceled().stopWatching(),
+            renthereum.Rented().stopWatching(),
+        ]
+        Promise.all(promises).then(() => {
+            done();
         })
     })
 

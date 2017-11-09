@@ -77,7 +77,7 @@ contract Renthereum {
     public
     returns(bool)
   {
-    Order item = itemsToRent[_index];  
+    Order memory item = itemsToRent[_index];  
     item.owner.transfer(msg.value);
     item.customer = msg.sender;
     item.rentPeriod = _period;
