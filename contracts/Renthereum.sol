@@ -50,8 +50,8 @@ contract Renthereum {
     itemsCount = 0;
   }
 
-  modifier isValidItem(uint256 _index, mapping(uint256 => Order) _itemsForRent) {
-    require(_index >= 0 && _index < itemsCount && _itemsForRent[_index].status == Status.AVAILABLE);
+  modifier isValidItem(uint256 _index, mapping(uint256 => Order) _itemsToRent) {
+    require(_index >= 0 && _index < itemsCount && _itemsToRent[_index].status == Status.AVAILABLE);
     _;
   }
 

@@ -21,13 +21,41 @@ const itemsToOrder = [{
     dailyValue: 1200,
     minPeriod: 1,
     maxPeriod: 180
-}]; 
+}];
 
 // --- Test variables 
 let owner = null;
 let customer = null;
 let renthereum = null;
 let itemsToRent = [];
+
+// --- Useful function
+const assertNewRentOrder = (contract, item, account, done) => {
+    contract.createOrder(
+        item.id,
+        item.name,
+        item.description,
+        item.dailyValue,
+        item.minPeriod,
+        item.maxPeriod,
+        { from: account }
+    ).then(transaction => {
+        should.exist(transaction.tx);
+        contract.Ordered().get((err, logs) => {
+            const event = logs[0].args;
+            expect(event).to.include.all.keys([
+                '_index',
+                '_id',
+                '_owner',
+                '_name',
+                '_value'
+            ]);
+            assert.equal(event._owner, account, "The current account must be the owner of the rent order");
+            itemsToRent.push(event);
+            done();       
+        })
+    })
+};
 
 contract('Renthereum', accounts => {
 
@@ -47,31 +75,16 @@ contract('Renthereum', accounts => {
         })
     })
     
-    it("should order an item", done => {
+    it("should create a rent order", done => {
         let item = itemsToOrder[0];
-        renthereum.createOrder(item.id,item.name,item.description, item.dailyValue, item.minPeriod, item.maxPeriod, {from: owner}).then(transaction => {
-            should.exist(transaction.tx);
-            renthereum.Ordered().get(function(err, logs){
-                const event = logs[0].args;
-                expect(event).to.include.all.keys([
-                    '_index',
-                    '_id',
-                    '_owner',
-                    '_name',
-                    '_value'
-                ]);
-                assert.equal(event._owner, owner, "The user must be the owner of the rent order");
-                itemsToRent.push(event);
-                done();       
-            })
-        })
+        assertNewRentOrder(renthereum, item, owner, done);
     })
 
     it("should cancel a rent order", done => {
         const item = itemsToRent[0];
-        renthereum.cancelOrder(itemIndex, {from: owner}).then(transaction => {
+        renthereum.cancelOrder(item._index, {from: owner}).then(transaction => {
             should.exist(transaction.tx);
-            renthereum.Canceled().get(function(err, logs){
+            renthereum.Canceled().get((err, logs) => {
                 const event = logs[0].args;
                 expect(event).to.include.all.keys([
                     '_id',
@@ -86,23 +99,17 @@ contract('Renthereum', accounts => {
     })
 
     it("should order a second item", done => {
-        const item = itemsToOrder[1];
-        renthereum.createOrder(item.id, item.name, item.description, item.dailyValue, item.minPeriod, item.maxPeriod, {from: owner}).then(transaction => {
-            should.exist(transaction.tx);
-            renthereum.Ordered().get(function(err, logs){
-                const event = logs[0].args;
-                itemsToRent.push(event);    
-                done();        
-            })
-        })
+        let item = itemsToOrder[1];
+        assertNewRentOrder(renthereum, item, owner, done);
     })
 
     it("should rent an item", done => {
         const item = itemsToRent[1];
         const rentPeriod = 30;
-        renthereum.rent(item._index, rentPeriod, {from: customer, value: item._dailyValue * rentPeriod }).then(transaction => {
+        const value = item._value * rentPeriod;
+        renthereum.rent(item._index, rentPeriod, { from: customer, value }).then(transaction => {
             should.exist(transaction.tx);
-            renthereum.Rented().get(function(err, logs){
+            renthereum.Rented().get((err, logs) => {
                 const event = logs[0].args;
                 expect(event).to.include.all.keys([
                     '_owner',
@@ -110,7 +117,7 @@ contract('Renthereum', accounts => {
                     '_period',
                     '_value'
                 ]);
-                assert.equal(event._customer, customer, "The user must be the customer of the order");
+                assert.equal(event._customer, customer, "The user must be the customer of the rented item");
                 done();              
             })
         })
