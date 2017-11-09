@@ -33,6 +33,8 @@ contract Renthereum {
   );
 
   event Rented(
+    uint256 _index,
+    string _id,
     address _owner,
     address _customer,
     uint _period,
@@ -40,6 +42,7 @@ contract Renthereum {
   );
 
   event Canceled(
+    uint256 _index,
     string _id,
     address _owner,
     string _name,
@@ -83,7 +86,7 @@ contract Renthereum {
     item.rentPeriod = _period;
     item.status = Status.RENTED;
     itemsToRent[_index] = item;
-    Rented(item.owner, msg.sender, _period, msg.value);
+    Rented(_index, item.id, item.owner, msg.sender, _period, msg.value);
     return true;
   }
 
@@ -121,7 +124,7 @@ contract Renthereum {
     Order memory order = itemsToRent[_index];
     order.status = Status.CANCELED;
     itemsToRent[_index] = order;
-    Canceled(order.id, order.owner, order.name, order.dailyValue);  
+    Canceled(_index, order.id, order.owner, order.name, order.dailyValue);  
     return true;
   }
 
