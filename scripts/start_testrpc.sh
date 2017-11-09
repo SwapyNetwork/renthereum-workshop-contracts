@@ -5,7 +5,7 @@ if [ -n "$testrpc_pid" ] && ps -p $testrpc_pid > /dev/null; then
   kill -9 $testrpc_pid
 fi
 
-
+# change 
 # We define 10 accounts with balance 1M ether, needed for high-value tests.
 testrpc_port=8545
 accounts=(
