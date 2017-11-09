@@ -68,7 +68,7 @@ contract('Renthereum', accounts => {
     })
 
     it("should cancel a rent order", done => {
-        let itemIndex = itemsToRent[0]._index;
+        const item = itemsToRent[0];
         renthereum.cancelOrder(itemIndex, {from: owner}).then(transaction => {
             should.exist(transaction.tx);
             renthereum.Canceled().get(function(err, logs){
@@ -85,8 +85,8 @@ contract('Renthereum', accounts => {
         })
     })
 
-    it("should order an second item", done => {
-        let item = itemsToOrder[1];
+    it("should order a second item", done => {
+        const item = itemsToOrder[1];
         renthereum.createOrder(item.id, item.name, item.description, item.dailyValue, item.minPeriod, item.maxPeriod, {from: owner}).then(transaction => {
             should.exist(transaction.tx);
             renthereum.Ordered().get(function(err, logs){
@@ -98,8 +98,9 @@ contract('Renthereum', accounts => {
     })
 
     it("should rent an item", done => {
-        let itemIndex = itemsToRent[1]._index;
-        renthereum.rent(itemIndex, 30, {from: customer, value: 1200 * 30}).then(transaction => {
+        const item = itemsToRent[1];
+        const rentPeriod = 30;
+        renthereum.rent(item._index, rentPeriod, {from: customer, value: item._dailyValue * rentPeriod }).then(transaction => {
             should.exist(transaction.tx);
             renthereum.Rented().get(function(err, logs){
                 const event = logs[0].args;
