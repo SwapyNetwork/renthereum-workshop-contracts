@@ -8,7 +8,7 @@ contract Renthereum {
     RENTED
   }
 
-  mapping(uint256 => Order) public itemsForHire;
+  mapping(uint256 => Order) public itemsToRent;
   uint256 public itemsCount;
   
   struct Order {
@@ -20,7 +20,7 @@ contract Renthereum {
     uint256 dailyValue;
     uint minPeriod;
     uint maxPeriod;
-    uint hirePeriod;
+    uint rentPeriod;
     Status status;
   }
 
@@ -50,18 +50,18 @@ contract Renthereum {
     itemsCount = 0;
   }
 
-  modifier isValidItem(uint256 _index, mapping(uint256 => Order) _itemsForHire) {
-    require(_index >= 0 && _index < itemsCount && _itemsForHire[_index].status == Status.AVAILABLE);
+  modifier isValidItem(uint256 _index, mapping(uint256 => Order) _itemsForRent) {
+    require(_index >= 0 && _index < itemsCount && _itemsForRent[_index].status == Status.AVAILABLE);
     _;
   }
 
-  modifier isValidValue(uint _hirePeriod, uint256 _itemValue) {
-    require(msg.value == _itemValue * _hirePeriod);
+  modifier isValidValue(uint _rentPeriod, uint256 _itemValue) {
+    require(msg.value == _itemValue * _rentPeriod);
     _;
   }
 
-  modifier isValidPeriod(uint _hirePeriod, uint _minPeriod, uint _maxPeriod){
-    require(_hirePeriod >= _minPeriod && _hirePeriod <= _maxPeriod);
+  modifier isValidPeriod(uint _rentPeriod, uint _minPeriod, uint _maxPeriod){
+    require(_rentPeriod >= _minPeriod && _rentPeriod <= _maxPeriod);
     _;
   }
 
@@ -70,19 +70,19 @@ contract Renthereum {
     _;
   }
 
-  function hire(uint256 _index, uint _period) payable
-    isValidItem(_index, itemsForHire)
-    isValidValue(_period, itemsForHire[_index].dailyValue) 
-    isValidPeriod(_period, itemsForHire[_index].minPeriod, itemsForHire[_index].maxPeriod)
+  function rent(uint256 _index, uint _period) payable
+    isValidItem(_index, itemsToRent)
+    isValidValue(_period, itemsToRent[_index].dailyValue) 
+    isValidPeriod(_period, itemsToRent[_index].minPeriod, itemsToRent[_index].maxPeriod)
     public
     returns(bool)
   {
-    Order item = itemsForHire[_index];  
+    Order item = itemsToRent[_index];  
     item.owner.transfer(msg.value);
     item.customer = msg.sender;
-    item.hirePeriod = _period;
+    item.rentPeriod = _period;
     item.status = Status.RENTED;
-    itemsForHire[_index] = item;
+    itemsToRent[_index] = item;
     Rented(item.owner, msg.sender, _period, msg.value);
     return true;
   }
@@ -105,7 +105,7 @@ contract Renthereum {
     item.dailyValue = _dailyValue;
     item.minPeriod = _minPeriod;
     item.maxPeriod = _maxPeriod;
-    itemsForHire[itemsCount] = item;
+    itemsToRent[itemsCount] = item;
     itemsCount++;
     Ordered(itemsCount - 1, _id, item.owner, item.name, item.dailyValue);
     return itemsCount - 1;
@@ -113,14 +113,14 @@ contract Renthereum {
 
   // cancel an available order
   function cancelOrder(uint256 _index)
-    isValidItem(_index, itemsForHire)
-    onlyOwner(itemsForHire[_index].owner)
+    isValidItem(_index, itemsToRent)
+    onlyOwner(itemsToRent[_index].owner)
     public
     returns(bool)
   {
-    Order memory order = itemsForHire[_index];
+    Order memory order = itemsToRent[_index];
     order.status = Status.CANCELED;
-    itemsForHire[_index] = order;
+    itemsToRent[_index] = order;
     Canceled(order.id, order.owner, order.name, order.dailyValue);  
     return true;
   }

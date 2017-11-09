@@ -12,6 +12,7 @@ let owner = null;
 let customer = null;
 let renthereum = null;
 let items = [];
+
 contract('Renthereum', accounts => {
 
     before( done => {
@@ -72,9 +73,9 @@ contract('Renthereum', accounts => {
         })
     })
 
-    it("should hire an item", done => {
+    it("should rent an item", done => {
         let itemIndex = items[1]._index;
-        renthereum.hire(itemIndex, 30, {from: customer, value: 1200 * 30}).then(transaction => {
+        renthereum.rent(itemIndex, 30, {from: customer, value: 1200 * 30}).then(transaction => {
             should.exist(transaction.tx);
             renthereum.Rented( { _customer : customer }).watch((err, log) => {
                 const event = log.args;
