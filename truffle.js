@@ -42,7 +42,6 @@ module.exports = {
     }    
   },
   rpc: {
-    // Use the default host and port when not using ropsten
     host: "localhost",
     port: 8545
   }
