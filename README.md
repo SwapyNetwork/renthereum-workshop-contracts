@@ -1,3 +1,5 @@
+<img src="https://github.com/swapynetwork/renthereum-workshop-contracts/blob/master/renthereum128.png">
+
 # Ethereum Workshop: Renthereum.
 Example of an application to rent items.
 
