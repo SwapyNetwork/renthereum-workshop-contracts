@@ -3,6 +3,8 @@
 # Ethereum Workshop: Renthereum.
 Example of an application to rent items.
 
+#### NOTE: Swapy Network together with Ethereum BH Meetup Group is going to host a Ethereum workshop in Belo Horizonte, Brazil. This repository was created for educational purposes only.
+
 ## Table of Contents
 
 * [Contracts](#contracts)
@@ -46,14 +48,20 @@ After that, make available your environment file inside the bash context:
 $ source .env
 ```
 
-For a better understanding of a local blockchain connection, this lecture may be useful: [Connecting to the network](https://github.com/ethereum/go-ethereum/wiki/Connecting-to-the-network)
-
 ## Compile
 
 Compile the contract with truffle:
 ```
 $ npm run compile
 ```
+## Start local network
+
+Start [testrpc](https://github.com/ethereumjs/testrpc) connection:
+```
+$ npm start
+```
+For a better understanding of a local blockchain connection, this lecture may be useful: [Connecting to the network](https://github.com/ethereum/go-ethereum/wiki/Connecting-to-the-network)
+
 ## Deploy 
 Run our migrations:
 ```
