@@ -16,7 +16,8 @@ Example of an application to rent items.
   
 # Contracts
 
-In construction...
+### [Renthereum.sol](https://github.com/swapynetwork/renthereum-workshop-contracts/blob/master/contracts/Renthereum.sol)
+Provide methods to include items to rent and hire ordered items. 
 
 # Setup
 
