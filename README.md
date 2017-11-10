@@ -25,19 +25,16 @@ Install [Node v6.11.2](https://nodejs.org/en/download/releases/)
 ```
 $ npm install -g truffle
 ```
-
 Install project dependencies:
 ```
 $ npm install
 ```
 ## Environment
 
-For setup your wallet configuration, addresses and a custom blockchain node provider to deploy, an environment file is necessary. We provide a `sample.env` file. We recommend that you set up your own variables and rename the file to `.env`.
+For set up your wallet, an environment file is necessary. We provide a `sample.env` file. We recommend that you set up your own variables and rename the file to `.env`.
 
 sample.env
 ```
-export NETWORK_ID=...
-export PROVIDER_URL=...
 export WALLET_MNEMONIC="twelve words mnemonic ... potato bread coconut pencil"
 ```
 
@@ -76,7 +73,7 @@ and run the Renthereum tests.
 
 [Truffle console](https://truffle.readthedocs.io/en/beta/getting_started/console/) can be used to interact with Renthereum. For example:
 ```
-$ truffle console --network test
+$ npm run console
 ```
 ```
 truffle(test)> Renthereum.deployed().itemsCount.call(); // 0 
