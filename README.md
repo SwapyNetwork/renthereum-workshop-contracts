@@ -15,11 +15,11 @@ Example of an application to rent items.
   * [Deploy](#deploy)
   * [Run tests](#run-tests)
   * [Interact with Renthereum](#interact-with-renthereum)
-  
+
 # Contracts
 
 ### [Renthereum.sol](https://github.com/swapynetwork/renthereum-workshop-contracts/blob/master/contracts/Renthereum.sol)
-Provide methods to include items to rent and hire ordered items. 
+Provide methods to include items to rent and hire ordered items.
 
 # Setup
 
@@ -39,7 +39,10 @@ $ npm install
 For set up your wallet, an environment file is necessary. We provide a `sample.env` file. We recommend that you set up your own variables and rename the file to `.env`.
 
 sample.env
-```
+```bash
+# To get the twelve words, you need to set up
+# your account on the MetaMask extension.
+
 export WALLET_MNEMONIC="twelve words mnemonic ... potato bread coconut pencil"
 ```
 
@@ -62,7 +65,7 @@ $ npm start
 ```
 For a better understanding of a local blockchain connection, this lecture may be useful: [Connecting to the network](https://github.com/ethereum/go-ethereum/wiki/Connecting-to-the-network)
 
-## Deploy 
+## Deploy
 Run our migrations:
 ```
 $ npm run migrate
@@ -74,18 +77,18 @@ After the transaction mining, the Rethereum is disponible for usage.
 ## Run tests
 We're using Truffle's test support. The script scripts/test.sh creates a local network and calls the unit tests.
 
-Type 
+Type
 ```
 $ npm test
 ```
 and run the Renthereum tests.
 
-## Interact with Renthereum 
+## Interact with Renthereum
 
 [Truffle console](https://truffle.readthedocs.io/en/beta/getting_started/console/) can be used to interact with Renthereum. For example:
 ```
 $ npm run console
 ```
 ```
-truffle(test)> Renthereum.deployed().itemsCount.call(); // 0 
+truffle(test)> Renthereum.deployed().itemsCount.call(); // 0
 ```
