@@ -5,7 +5,7 @@ const expect = require('chai').expect;
 
 // --- Artifacts
 const Renthereum = artifacts.require("./Renthereum.sol");
-
+//
 // --- Test constants 
 const itemsToOrder = [{
     id: '123456789',
