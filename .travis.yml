@@ -1,6 +1,5 @@
 language: node_js
 sudo: true
-install: travis_wait mvn install
 node_js:
   - "7"
 after_script:
@@ -9,3 +8,4 @@ after_script:
   - killall -9 java
   - killall -9 Xvfb
   # - ps aux
+fail_fast: true
