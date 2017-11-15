@@ -1,4 +1,10 @@
 language: node_js
-sudo: required
+sudo: true
 node_js:
   - "7"
+after_script:
+  # - ps aux
+  - killall -9 php
+  - killall -9 java
+  - killall -9 Xvfb
+  # - ps aux
