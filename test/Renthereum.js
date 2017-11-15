@@ -123,15 +123,15 @@ contract('Renthereum', accounts => {
         })
     })
 
-    // after(done => {
-    //     const promises = [
-    //         renthereum.Ordered().stopWatching(),
-    //         renthereum.Canceled().stopWatching(),
-    //         renthereum.Rented().stopWatching(),
-    //     ];
-    //     Promise.all(promises).then(() => {
-    //         done();
-    //     })
-    // })
+    after(done => {
+        const promises = [
+            renthereum.Ordered().stopWatching(),
+            renthereum.Canceled().stopWatching(),
+            renthereum.Rented().stopWatching(),
+        ];
+        Promise.all(promises).then(() => {
+            done();
+        })
+    })
 
 })
