@@ -5,7 +5,7 @@ trap cleanup EXIT
 
 cleanup() {
   # Kill the testrpc instance that we started (if we started one and if it's still running).
-  if [ -n "$testrpc_pid" ] && ps -p $testrpc_pid > /dev/null; then
+  if [ -n "$testrpc_pid" ] && ps -p $testrpc_pid  then
     kill -9 $testrpc_pid
   fi
 }
@@ -30,7 +30,7 @@ start_testrpc() {
     --account="0x2bdd21761a483f71054e14f5b827213567971c676928d9a1808cbfa4b7501208,1000000000000000000000000"
     --account="0x2bdd21761a483f71054e14f5b827213567971c676928d9a1808cbfa4b7501209,1000000000000000000000000"
   )
-  testrpc --gasLimit 0xfffffffffff --port "$testrpc_port" "${accounts[@]}" > /dev/null &
+  testrpc --gasLimit 0xfffffffffff --port "$testrpc_port" "${accounts[@]}" &
   testrpc_pid=$!
 }
 
