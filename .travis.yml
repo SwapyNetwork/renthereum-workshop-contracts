@@ -4,7 +4,8 @@ group: beta
 language: node_js
 node_js:
   - "6"
-cache:
-  npm: true
 matrix:
   fast_finish: true
+cache:
+  directories:
+    - "node_modules"
