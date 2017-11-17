@@ -3,7 +3,7 @@
 # Ethereum Workshop: Renthereum.
 Example of an application to rent items.
 
-[![Build Status](https://travis-ci.org/SwapyNetwork/renthereum-workshop-contracts.svg?branch=master)](ttps://travis-ci.org/SwapyNetwork/renthereum-workshop-contracts)
+[![Build Status](https://travis-ci.org/SwapyNetwork/renthereum-workshop-contracts.svg?branch=master)](https://travis-ci.org/SwapyNetwork/renthereum-workshop-contracts)
 
 
 #### NOTE: Swapy Network together with Ethereum BH Meetup Group is going to host a Ethereum workshop in Belo Horizonte, Brazil. This repository was created for educational purposes only.
