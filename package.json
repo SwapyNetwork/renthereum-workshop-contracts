@@ -26,10 +26,6 @@
     "web3": "^0.18.4",
     "web3-provider-engine": "^8.6.1"
   },
-  "devDependencies": {
-    "babel-polyfill": "^6.23.0",
-    "babel-register": "^6.23.0"
-  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/swapynetwork/renthereum-workshop-contracts.git"
