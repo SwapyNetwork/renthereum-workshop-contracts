@@ -4,8 +4,6 @@ group: beta
 language: node_js
 node_js:
   - "8"
-  - "7"
-  - "6"
 matrix:
   fast_finish: true
 cache:
