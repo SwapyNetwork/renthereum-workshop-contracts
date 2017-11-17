@@ -24,7 +24,7 @@ Provide methods to include items to rent and hire ordered items.
 # Setup
 
 ## Install Dependencies
-Install [Node v6.11.2](https://nodejs.org/en/download/releases/)
+Install [Node v8.9.1](https://nodejs.org/en/download/releases/)
 
 [Truffle](http://truffleframework.com/) is used for deployment. We run the version installed from our dependencies using npm scripts, but if you prefer to install it globally you can do:
 ```

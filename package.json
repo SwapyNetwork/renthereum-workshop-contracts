@@ -4,7 +4,7 @@
   "description": "Renthereum workshop smart contracts",
   "main": "truffle.js",
   "scripts": {
-    "test": "fuser -k 8545/tcp & scripts/test.sh",
+    "test": "scripts/test.sh",
     "test.win": "sh scripts/test.sh",
     "start": "fuser -k 8545/tcp & scripts/start_testrpc.sh",
     "start.win": "sh scripts/start_testrpc.sh",
@@ -26,7 +26,6 @@
     "web3": "^0.18.4",
     "web3-provider-engine": "^8.6.1"
   },
-  "devDependencies": {},
   "repository": {
     "type": "git",
     "url": "git+https://github.com/swapynetwork/renthereum-workshop-contracts.git"
